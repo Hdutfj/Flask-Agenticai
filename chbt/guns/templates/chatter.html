@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Assistant Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" 
+        integrity="sha512-m7jTJQgN5bYv0PEQb0PYMyoRx+X0hYb6J9ZBQl2N7iJuz+9BdqV5pKc+4EvJk8pK1OAsyEq3VZ7Bg+zwLuU4kA==" 
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f1f1f1;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+      height: 100vh;
+    }
+    .chat-container {
+      width: 100%;
+      max-width: 980px;
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      height: 80vh;
+      overflow-y: auto;
+      margin-right: 20px;
+    }
+    .title {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .message {
+      padding: 12px 16px;
+      border-radius: 18px;
+      max-width: 80%;
+      white-space: pre-wrap;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+    .user {
+      align-self: flex-end;
+      background-color: #007bff;
+      color: #fff;
+    }
+    .bot {
+      align-self: flex-start;
+      background-color: #f0f0f0;
+      color: #000;
+    }
+    form {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: auto;
+    }
+    .logo-panel {
+      display: flex;
+      gap: 16px;
+      flex-shrink: 0;
+    }
+    .logo-panel i {
+      font-size: 24px;
+      cursor: pointer;
+      transition: transform 0.2s;
+      user-select: none;
+      line-height: 1;
+      /* Using emoji text inside i tag, so adjust vertical alignment */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      width: 32px;
+      border-radius: 6px;
+    }
+    .logo-panel i:hover {
+      transform: scale(1.2);
+    }
+    input[type="text"] {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .history-panel {
+      width: 300px;
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+      height: 80vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .history-panel h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #333;
+      text-align: center;
+    }
+    .history-item {
+      background-color: #f9f9f9;
+      padding: 10px 12px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      border-left: 4px solid #007bff;
+      transition: background-color 0.2s;
+      cursor: default;
+    }
+    .history-item:hover {
+      background-color: #eef5ff;
+    }
+    .history-item strong {
+      font-size: 0.95rem;
+      color: #222;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .history-item small {
+      font-size: 0.85rem;
+      color: #555;
+      display: block;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="chat-container" id="chat-container">
+    <div class="title">🎓 Assistant Bot</div>
+
+    {% for pair in history %}
+      <div class="message user">{{ pair.user }}</div>
+      <div class="message bot">{{ pair.bot | safe }}</div>
+    {% endfor %}
+
+    <form method="POST">
+      <div class="logo-panel">
+        <i class="pdf" title="PDF Converter" style="color: #d9534f;">📰</i>
+        <i class="deepsearch" title="Deep Search" style="color: #007bff;">🧠</i>
+      </div>
+      <input type="text" name="input_text" placeholder="Ask something..." autocomplete="off" required />
+      <button type="submit" name="action" value="ask_agent">Send</button>
+    </form>
+  </div>
+
+  <div class="history-panel">
+    <h3>📜 History</h3>
+    {% for item in history %}
+      <div class="history-item">
+        <strong>{{ item.user }}</strong>
+        <small>{{ item.bot[:60] }}</small>
+      </div>
+    {% endfor %}
+  </div>
+
+  <script>
+    const chatContainer = document.getElementById('chat-container');
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+  </script>
+</body>
+</html>
